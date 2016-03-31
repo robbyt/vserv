@@ -209,6 +209,10 @@ def main():
     parser.add_argument('--remove', help='Remove monitoring for /path/to/vmx')
     parser.add_argument('--reset', help='Reset /path/to/vmx')
     parser.add_argument('--get-ip', help='Get IP for /path/to/vmx')
+    parser.add_argument(
+        '--refresh-rate', help='How often should the VM state be refreshed',
+        type=int, default=15)
+    
     args = parser.parse_args()
 
     syslog.openlog('vserv')
@@ -274,7 +278,7 @@ def main():
                             syslog.syslog(syslog.LOG_ALERT, 'Starting: %s' % vmx)
                             monitor.start_vmx(vmx)
                         monitor.set_running(vmx)
-                time.sleep(15)
+                time.sleep(args.refresh_rate)
             except KeyboardInterrupt:
                 print '...later!'
                 sys.exit(1)
